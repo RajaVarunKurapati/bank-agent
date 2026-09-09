@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0",
+  "id": "lookup_member_balance",
+  "name": "Look up member and read savings balance",
+  "description": "Given a member ID, open the member record and return the savings balance. Read-only.",
+  "version": 1,
+  "surface_type": "legacy_web",
+  "entry_url": "http://127.0.0.1:5000",
+  "inputs": [
+    {
+      "name": "member_id",
+      "type": "string",
+      "required": true,
+      "sensitive": true,
+      "description": "Member/account identifier to look up (PII; redacted in logs)."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "savings_balance",
+      "type": "string",
+      "description": "Current savings balance as displayed, e.g. $4,210.55."
+    },
+    {
+      "name": "member_name",
+      "type": "string",
+      "description": "Account holder name."
+    }
+  ],
+  "steps": [
+    {
+      "index": 1,
+      "action": "type",
+      "locator": {
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "textbox",
+            "name": "Member ID",
+            "text": null,
+            "selector": null
+          },
+          {
+            "kind": "role",
+            "role": "textbox",
+            "name": null,
+            "text": null,
+            "selector": null
+          }
+        ],
+        "rationale": "Prefer role+accessible-name; fall back to role alone because this legacy input has no linked <label>."
+      },
+      "url": null,
+      "value_from_input": "member_id",
+      "value_literal": null,
+      "extractions": [],
+      "checkpoint": null,
+      "risk": "safe"
+    },
+    {
+      "index": 2,
+      "action": "click",
+      "locator": {
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "button",
+            "name": "Search",
+            "text": null,
+            "selector": null
+          },
+          {
+            "kind": "text",
+            "role": null,
+            "name": null,
+            "text": "Search",
+            "selector": null
+          }
+        ],
+        "rationale": "Buttons expose a stable accessible name; text match is the fallback if the role is misreported in legacy markup."
+      },
+      "url": null,
+      "value_from_input": null,
+      "value_literal": null,
+      "extractions": [],
+      "checkpoint": null,
+      "risk": "safe"
+    },
+    {
+      "index": 3,
+      "action": "read",
+      "locator": null,
+      "url": null,
+      "value_from_input": null,
+      "value_literal": null,
+      "extractions": [
+        {
+          "output": "savings_balance",
+          "pattern": "Savings Balance\\s*(\\$[\\d,]+\\.\\d{2})"
+        },
+        {
+          "output": "member_name",
+          "pattern": "Name\\s+([A-Za-z][A-Za-z .'-]+?)\\s+Member ID"
+        }
+      ],
+      "checkpoint": {
+        "kind": "text_present",
+        "value": "Savings Balance"
+      },
+      "risk": "safe"
+    }
+  ],
+  "success": {
+    "kind": "text_present",
+    "value": "Savings Balance"
+  },
+  "business_outcomes": [
+    {
+      "code": "NOT_FOUND",
+      "detect": {
+        "kind": "text_present",
+        "value": "No such member"
+      },
+      "message": "No member exists with the supplied ID."
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "detect": {
+        "kind": "text_present",
+        "value": "Permission denied"
+      },
+      "message": "The member record exists but is restricted."
+    }
+  ],
+  "created_from_run": "discovery_20260909_144237",
+  "discovered_by_model": "groq (see discovery run)",
+  "created_at": "2026-09-09T14:50:41"
+}
