@@ -1,0 +1,41 @@
+{
+  "goal": "Look up member 12345 and read their current savings balance.",
+  "start_url": "http://127.0.0.1:5000",
+  "result": {
+    "extracted": "{\"member_id\": \"12345\", \"name\": \"Jordan Rivera\", \"savings_balance\": \"$4,210.55\"}",
+    "summary": "Found member 12345 (Jordan Rivera). Current savings balance is $4,210.55."
+  },
+  "steps": [
+    {
+      "step": 1,
+      "reasoning": "",
+      "action": "type_text",
+      "args": {
+        "name": "Member ID",
+        "role": "textbox",
+        "value": "12345"
+      },
+      "observation": "typed"
+    },
+    {
+      "step": 2,
+      "reasoning": "",
+      "action": "click",
+      "args": {
+        "name": "Search",
+        "role": "button"
+      },
+      "observation": "clicked"
+    },
+    {
+      "step": 3,
+      "reasoning": "",
+      "action": "finish",
+      "args": {
+        "extracted": "{\"member_id\": \"12345\", \"name\": \"Jordan Rivera\", \"savings_balance\": \"$4,210.55\"}",
+        "summary": "Found member 12345 (Jordan Rivera). Current savings balance is $4,210.55."
+      },
+      "observation": "finished"
+    }
+  ]
+}
