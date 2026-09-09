@@ -1,0 +1,26 @@
+{
+  "capability": "lookup_member_balance",
+  "version": 1,
+  "inputs": {
+    "member_id": "***REDACTED***"
+  },
+  "trace": [
+    {
+      "step": 1,
+      "action": "type",
+      "locator_kind": "role_name",
+      "ok": true
+    },
+    {
+      "step": 2,
+      "action": "click",
+      "locator_kind": "role_name",
+      "ok": true
+    }
+  ],
+  "status": "BUSINESS_OUTCOME",
+  "outcome": {
+    "code": "PERMISSION_DENIED",
+    "message": "The member record exists but is restricted."
+  }
+}

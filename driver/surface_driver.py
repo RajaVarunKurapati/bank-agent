@@ -66,6 +66,10 @@ class SurfaceDriver:
                     pass
         return "\n".join(texts)
 
+    def has_text(self, text):
+        """Checkpoint helper: is this text present anywhere on page or in frames?"""
+        return text.lower() in self.read_text().lower()
+
     def _resolve(self, role=None, name=None, text=None):
         """
         Ordered locator strategy. This IS the robustness story:
