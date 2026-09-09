@@ -1,0 +1,57 @@
+{
+  "capability": "lookup_member_balance",
+  "inputs": {
+    "member_id": "***REDACTED***"
+  },
+  "trace": [
+    {
+      "step": 1,
+      "action": "type",
+      "locator_kind": "role_name",
+      "ok": true
+    },
+    {
+      "step": 2,
+      "action": "click",
+      "locator_kind": "role_name",
+      "ok": true
+    }
+  ],
+  "handoffs": [
+    {
+      "intervention": {
+        "capability": "lookup_member_balance",
+        "step": 2,
+        "reason": "LOCATOR_UNRESOLVED",
+        "detail": "agent could not resolve control for step 2",
+        "url": "http://127.0.0.1:5000/",
+        "screenshot": "evidence\\handoff_20260909_163629\\handoff_before.png",
+        "raised_at": "2026-09-09T16:36:30"
+      },
+      "after_url": "http://127.0.0.1:5000/",
+      "after_screenshot": "evidence\\handoff_20260909_163629\\handoff_after.png"
+    }
+  ],
+  "controller_transitions": [
+    {
+      "at": "2026-09-09T16:36:30",
+      "controller": "PAUSED",
+      "note": "stuck: LOCATOR_UNRESOLVED"
+    },
+    {
+      "at": "2026-09-09T16:36:30",
+      "controller": "HUMAN",
+      "note": "operator took control of live session"
+    },
+    {
+      "at": "2026-09-09T16:37:13",
+      "controller": "AGENT",
+      "note": "control returned to agent"
+    }
+  ],
+  "status": "SUCCESS",
+  "result": {
+    "savings_balance": "$4,210.55",
+    "member_name": "Jordan Rivera"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "capability": "lookup_member_balance",
+  "version": 1,
+  "inputs": {
+    "member_id": "***REDACTED***"
+  },
+  "trace": [
+    {
+      "step": 1,
+      "action": "type",
+      "locator_kind": "role_name",
+      "ok": true
+    },
+    {
+      "step": 2,
+      "action": "click",
+      "locator_kind": "role_name",
+      "ok": true
+    },
+    {
+      "step": 3,
+      "action": "read",
+      "outputs": {
+        "savings_balance": "$4,210.55",
+        "member_name": "Jordan Rivera"
+      }
+    }
+  ],
+  "status": "SUCCESS",
+  "outputs": {
+    "savings_balance": "$4,210.55",
+    "member_name": "Jordan Rivera"
+  }
+}
