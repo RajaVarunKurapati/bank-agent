@@ -1,0 +1,14 @@
+{
+  "capability": "lookup_member_balance",
+  "version": 1,
+  "inputs": {
+    "member_id": "***REDACTED***"
+  },
+  "trace": [],
+  "status": "BLOCKED_BY_POLICY",
+  "blocked": {
+    "step": 1,
+    "reason": "RISKY_ACTION_BLOCKED",
+    "detail": "'type' is risky/irreversible and requires approval"
+  }
+}

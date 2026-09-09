@@ -17,13 +17,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from enum import Enum
 from driver.surface_driver import SurfaceDriver
 from schema import Capability
-
+from policy import DEFAULT_POLICY, check_navigation, check_action, PolicyViolation
 
 class Status(str, Enum):
     SUCCESS = "SUCCESS"
     BUSINESS_OUTCOME = "BUSINESS_OUTCOME"
     RECOVERABLE_HANDLED = "RECOVERABLE_HANDLED"
     HARD_FAILURE = "HARD_FAILURE"
+    BLOCKED_BY_POLICY = "BLOCKED_BY_POLICY"
 
 
 def _redact(inputs, params):
@@ -83,9 +84,15 @@ def _resolve_and_act(driver, step, params, log):
     return False, last_err
 
 
-def replay(artifact_path, params, evidence_dir=None, headless=True):
+def replay(artifact_path, params, evidence_dir=None, headless=True, policy=DEFAULT_POLICY):
     with open(artifact_path) as f:
         cap = Capability.model_validate_json(f.read())
+    # allowlist: refuse the whole run if the entry point is off-policy
+    try:
+        check_navigation(policy, cap.entry_url)
+    except PolicyViolation as pv:
+        return {"status": Status.BLOCKED_BY_POLICY.value, "capability": cap.id,
+                "blocked": {"reason": pv.reason_code, "detail": pv.detail}}
 
     log = {"capability": cap.id, "version": cap.version,
            "inputs": _redact(cap.inputs, params), "trace": []}
@@ -129,7 +136,13 @@ def replay(artifact_path, params, evidence_dir=None, headless=True):
             if bo:
                 return finish(Status.BUSINESS_OUTCOME,
                               outcome={"code": bo.code, "message": bo.message})
-
+            # SAFETY GATE: every action passes through policy before executing
+            try:
+                check_action(policy, step.action.value, step.risk.value)
+            except PolicyViolation as pv:
+                return finish(Status.BLOCKED_BY_POLICY,
+                              blocked={"step": step.index, "reason": pv.reason_code,
+                                       "detail": pv.detail})
             ok, err = _resolve_and_act(driver, step, params, trace)
             if not ok:
                 # after an action fails, a business outcome may explain why
